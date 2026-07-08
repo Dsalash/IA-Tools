@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Herramientas de IA — Guía de Referencia</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#1e3a5f;--blue:#2563eb;--blue-l:#eff6ff;
+  --teal:#0f766e;--teal-l:#f0fdfa;
+  --green:#15803d;--green-l:#f0fdf4;
+  --purple:#6d28d9;--purple-l:#f5f3ff;
+  --gold:#d97706;--gold-l:#fffbeb;
+  --red:#b91c1c;--red-l:#fef2f2;
+  --orange:#c2410c;--orange-l:#fff7ed;
+  --gray:#374151;--gray-l:#f9fafb;
+  --border:#e5e7eb;--muted:#6b7280;--text:#111827;
+}
+html{font-size:16px}
+body{font-family:'Inter',sans-serif;background:#f3f4f6;color:var(--text);min-height:100vh}
+
+/* HEADER */
+.header{background:var(--navy);color:white;padding:2.5rem 2rem 2rem}
+.header-inner{max-width:1100px;margin:0 auto}
+.header h1{font-size:2rem;font-weight:800;line-height:1.2;margin-bottom:.5rem}
+.header p{font-size:1rem;color:rgba(255,255,255,.7);line-height:1.6;max-width:600px}
+.badge{display:inline-block;background:rgba(255,255,255,.15);color:white;font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.25rem .75rem;border-radius:99px;margin-bottom:1rem}
+
+/* FILTROS */
+.filters-wrap{background:white;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;box-shadow:0 1px 8px rgba(0,0,0,.06)}
+.filters{max-width:1100px;margin:0 auto;padding:1rem 2rem;display:flex;gap:.75rem;flex-wrap:wrap;align-items:center}
+.filter-label{font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-right:.25rem;white-space:nowrap}
+.filter-btn{padding:.4rem .9rem;border:1.5px solid var(--border);border-radius:99px;font-size:.82rem;font-weight:600;color:var(--muted);background:white;cursor:pointer;transition:all .18s;white-space:nowrap;font-family:'Inter',sans-serif}
+.filter-btn:hover{border-color:var(--blue);color:var(--blue);background:var(--blue-l)}
+.filter-btn.active{border-color:var(--blue);color:white;background:var(--blue)}
+.search-wrap{margin-left:auto}
+.search-input{padding:.4rem 1rem;border:1.5px solid var(--border);border-radius:99px;font-size:.88rem;font-family:'Inter',sans-serif;color:var(--text);outline:none;width:200px;transition:border-color .18s}
+.search-input:focus{border-color:var(--blue)}
+
+/* GRID */
+.main{max-width:1100px;margin:0 auto;padding:2rem}
+.section-title{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:1rem;display:flex;align-items:center;gap:.75rem}
+.section-title::after{content:'';flex:1;height:1px;background:var(--border)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.25rem;margin-bottom:2.5rem}
+
+/* CARD */
+.card{background:white;border:1.5px solid var(--border);border-radius:1rem;padding:1.25rem 1.4rem;display:flex;flex-direction:column;gap:.75rem;transition:all .2s;cursor:default}
+.card:hover{border-color:var(--blue);box-shadow:0 4px 20px rgba(37,99,235,.1);transform:translateY(-2px)}
+.card.hidden{display:none}
+.card-header{display:flex;align-items:flex-start;gap:.875rem}
+.card-logo{width:2.75rem;height:2.75rem;border-radius:.625rem;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0}
+.card-name{font-size:1.05rem;font-weight:700;color:var(--text);line-height:1.2}
+.card-url{font-size:.78rem;color:var(--blue);text-decoration:none;display:inline-flex;align-items:center;gap:.25rem;margin-top:.15rem}
+.card-url:hover{text-decoration:underline}
+.card-desc{font-size:.88rem;color:var(--muted);line-height:1.6}
+.card-tags{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.25rem}
+.tag{display:inline-flex;align-items:center;padding:.2rem .6rem;border-radius:99px;font-size:.72rem;font-weight:600;letter-spacing:.03em}
+.card-use{font-size:.85rem;color:var(--gray);line-height:1.5;padding:.75rem .875rem;border-radius:.625rem;border-left:3px solid}
+.card-footer{display:flex;align-items:center;justify-content:space-between;margin-top:auto;padding-top:.5rem;border-top:1px solid var(--border)}
+.free-badge{font-size:.7rem;font-weight:700;padding:.2rem .6rem;border-radius:99px}
+.level-badge{font-size:.7rem;color:var(--muted);font-weight:500}
+
+/* VISTA VACÍA */
+.empty{text-align:center;padding:4rem 2rem;color:var(--muted)}
+.empty-icon{font-size:3rem;margin-bottom:1rem}
+.empty h3{font-size:1.1rem;font-weight:700;color:var(--gray);margin-bottom:.5rem}
+
+/* FOOTER */
+footer{text-align:center;padding:2rem;color:var(--muted);font-size:.82rem;border-top:1px solid var(--border);background:white;margin-top:2rem}
+
+/* RESPONSIVE */
+@media(max-width:640px){
+  .header{padding:1.5rem 1rem}
+  .header h1{font-size:1.5rem}
+  .main{padding:1.25rem 1rem}
+  .filters{padding:.75rem 1rem}
+  .search-wrap{margin-left:0;width:100%}
+  .search-input{width:100%}
+  .grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="badge">Programa de Capacitación IA · 2025</div>
+    <h1>Guía de Herramientas de IA</h1>
+    <p>Referencia rápida para el equipo. Filtra por tarea o área de trabajo para encontrar la herramienta que más te sirve en cada situación.</p>
+  </div>
+</div>
+
+<div class="filters-wrap">
+  <div class="filters">
+    <span class="filter-label">Filtrar por:</span>
+    <button class="filter-btn active" data-filter="all">Todas</button>
+    <button class="filter-btn" data-filter="redaccion">Redacción</button>
+    <button class="filter-btn" data-filter="analisis">Análisis</button>
+    <button class="filter-btn" data-filter="busqueda">Búsqueda</button>
+    <button class="filter-btn" data-filter="documentos">Documentos</button>
+    <button class="filter-btn" data-filter="imagenes">Imágenes</button>
+    <button class="filter-btn" data-filter="audio">Audio / Video</button>
+    <button class="filter-btn" data-filter="office">Office / Workspace</button>
+    <button class="filter-btn" data-filter="codigo">Código</button>
+    <button class="filter-btn" data-filter="gratis">Gratis</button>
+    <div class="search-wrap">
+      <input type="text" class="search-input" placeholder="Buscar herramienta..." id="searchInput">
+    </div>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- VISTAS EN EL PROGRAMA -->
+  <div class="section-title" id="section-programa">Herramientas del programa <span style="background:var(--blue);color:white;font-size:.65rem;padding:.15rem .5rem;border-radius:99px;font-weight:700">Vistas en clase</span></div>
+  <div class="grid" id="grid-programa"></div>
+
+  <!-- OTRAS HERRAMIENTAS -->
+  <div class="section-title" id="section-otras">Más herramientas recomendadas</div>
+  <div class="grid" id="grid-otras"></div>
+
+  <div class="empty hidden" id="empty-state">
+    <div class="empty-icon">🔍</div>
+    <h3>No se encontraron herramientas</h3>
+    <p>Intenta con otro filtro o término de búsqueda.</p>
+  </div>
+
+</div>
+
+<footer>
+  Programa de Capacitación en IA · Equipo de Contabilidad y Secretaría de Presidencia · 2025<br>
+  <span style="font-size:.75rem;margin-top:.25rem;display:inline-block">Las herramientas gratuitas pueden tener límites de uso. Siempre usar datos ficticios en versiones sin licencia corporativa.</span>
+</footer>
+
+<script>
+const tools = [
+  // ── PROGRAMA ──────────────────────────────────────────────────────
+  {
+    id:'claude', programa:true,
+    name:'Claude', url:'https://claude.ai', emoji:'⭐', bg:'#fffbeb', color:'#d97706',
+    desc:'IA de Anthropic. Excelente para redacción profunda, análisis de documentos, instrucciones largas y textos formales. La herramienta principal del programa.',
+    tags:['redaccion','analisis','documentos'],
+    tagLabels:['Redacción','Análisis','Documentos'],
+    uso:'Correos de cobranza · Informes · Análisis de variación · Contratos · Cartas formales',
+    free:'Gratuito + Licencia', nivel:'Básico a avanzado',
+    accentBg:'var(--gold-l)', accentBorder:'var(--gold)'
+  },
+  {
+    id:'gemini', programa:true,
+    name:'Gemini', url:'https://gemini.google.com', emoji:'🔵', bg:'#eff6ff', color:'#2563eb',
+    desc:'IA de Google. Integrada en Gmail, Docs y Drive. Ideal para quienes trabajan en Google Workspace. Tiene modelos Flash (rápido) y Pro (análisis profundo).',
+    tags:['redaccion','analisis','office'],
+    tagLabels:['Redacción','Análisis','Google Workspace'],
+    uso:'Correos en Gmail · Documentos en Docs · Búsqueda actualizada · Análisis de datos',
+    free:'Gratuito', nivel:'Básico a intermedio',
+    accentBg:'var(--blue-l)', accentBorder:'var(--blue)'
+  },
+  {
+    id:'perplexity', programa:true,
+    name:'Perplexity', url:'https://perplexity.ai', emoji:'🔍', bg:'#f0fdfa', color:'#0f766e',
+    desc:'Motor de búsqueda con IA. Busca en internet en tiempo real y muestra la fuente de cada dato. Ideal para datos normativos, tasas e índices que cambian frecuentemente.',
+    tags:['busqueda','analisis'],
+    tagLabels:['Búsqueda','Datos actualizados'],
+    uso:'IPC · Tasas de interés · Plazos legales · Normativas vigentes · Noticias recientes',
+    free:'Gratuito', nivel:'Básico',
+    accentBg:'var(--teal-l)', accentBorder:'var(--teal)'
+  },
+  {
+    id:'notebooklm', programa:true,
+    name:'NotebookLM', url:'https://notebooklm.google.com', emoji:'📓', bg:'#eff6ff', color:'#4285f4',
+    desc:'IA de Google para analizar documentos propios. Se suben PDFs, Word o texto y se hacen preguntas sobre ese contenido. Solo responde sobre lo que está en el documento.',
+    tags:['documentos','analisis'],
+    tagLabels:['Documentos propios','Análisis'],
+    uso:'Contratos · Balances · Actas · Informes de auditoría · Cualquier PDF extenso',
+    free:'Gratuito', nivel:'Básico',
+    accentBg:'var(--blue-l)', accentBorder:'#4285f4'
+  },
+  {
+    id:'chatgpt', programa:true,
+    name:'ChatGPT', url:'https://chatgpt.com', emoji:'🤖', bg:'#f0fdf4', color:'#10a37f',
+    desc:'IA de OpenAI. Excelente para brainstorming, ideas creativas y segunda opinión. GPT-4o es el modelo principal; o1 para razonamiento complejo.',
+    tags:['redaccion','analisis','documentos'],
+    tagLabels:['Redacción','Ideas creativas','Análisis'],
+    uso:'Variantes de texto · Lluvia de ideas · Comparar con Claude · Explicaciones detalladas',
+    free:'Gratuito + Plus', nivel:'Básico a avanzado',
+    accentBg:'var(--green-l)', accentBorder:'var(--green)'
+  },
+  {
+    id:'copilot365', programa:true,
+    name:'Copilot (Microsoft 365)', url:'https://copilot.microsoft.com', emoji:'🟦', bg:'#eff6ff', color:'#0078d4',
+    desc:'IA de Microsoft integrada en Word, Excel, Outlook, Teams y PowerPoint. Automatización ligera dentro del ecosistema Office sin configuración adicional.',
+    tags:['redaccion','analisis','documentos','office'],
+    tagLabels:['Office','Automatización','Documentos'],
+    uso:'Actas de Teams · Resumir correos · Analizar Excel · Borradores en Word · Resúmenes en PowerPoint',
+    free:'Con licencia M365', nivel:'Básico',
+    accentBg:'var(--blue-l)', accentBorder:'#0078d4'
+  },
+
+  // ── OTRAS HERRAMIENTAS ────────────────────────────────────────────
+  {
+    id:'grok', programa:false,
+    name:'Grok', url:'https://grok.com', emoji:'🚀', bg:'#f8fafc', color:'#374151',
+    desc:'IA de xAI (Elon Musk). Accede a datos de X (Twitter) en tiempo real. Útil para tendencias actuales, noticias y opinión pública reciente.',
+    tags:['redaccion','busqueda','analisis'],
+    tagLabels:['Redacción','Búsqueda','Tiempo real'],
+    uso:'Noticias de último momento · Tendencias de mercado · Opinión pública · Análisis de redes sociales',
+    free:'Gratuito + Premium', nivel:'Básico',
+    accentBg:'var(--gray-l)', accentBorder:'#6b7280'
+  },
+  {
+    id:'mistral', programa:false,
+    name:'Mistral (Le Chat)', url:'https://chat.mistral.ai', emoji:'🌊', bg:'#fff7ed', color:'#c2410c',
+    desc:'IA europea de alto rendimiento. Muy buena en redacción en español y francés. Fuerte en análisis de documentos legales y financieros. Respeta privacidad europea (GDPR).',
+    tags:['redaccion','analisis','documentos'],
+    tagLabels:['Redacción','Privacidad GDPR','Documentos'],
+    uso:'Alternativa a Claude · Documentos legales · Análisis financiero · Redacción formal',
+    free:'Gratuito + Pro', nivel:'Básico a intermedio',
+    accentBg:'var(--orange-l)', accentBorder:'var(--orange)'
+  },
+  {
+    id:'copilot-web', programa:false,
+    name:'Copilot (web)', url:'https://copilot.microsoft.com', emoji:'🔷', bg:'#eff6ff', color:'#0078d4',
+    desc:'Versión web de Copilot de Microsoft, accesible desde cualquier navegador sin necesidad de Office. Integra búsqueda Bing con IA para respuestas actualizadas.',
+    tags:['redaccion','busqueda','analisis'],
+    tagLabels:['Búsqueda','Redacción','Gratis'],
+    uso:'Búsqueda con contexto · Redacción rápida · Resúmenes · Alternativa a Perplexity',
+    free:'Gratuito', nivel:'Básico',
+    accentBg:'var(--blue-l)', accentBorder:'#0078d4'
+  },
+  {
+    id:'gamma', programa:false,
+    name:'Gamma', url:'https://gamma.app', emoji:'🎨', bg:'var(--purple-l)', color:'var(--purple)',
+    desc:'Crea presentaciones, documentos y páginas web con IA en minutos. Solo se describe el contenido y Gamma genera el diseño automáticamente. Excelente para propuestas y reportes visuales.',
+    tags:['documentos','redaccion'],
+    tagLabels:['Presentaciones','Diseño automático'],
+    uso:'Presentaciones para directorio · Propuestas comerciales · Reportes visuales · Informes ejecutivos',
+    free:'Gratuito + Pro', nivel:'Básico',
+    accentBg:'var(--purple-l)', accentBorder:'var(--purple)'
+  },
+  {
+    id:'napkin', programa:false,
+    name:'Napkin AI', url:'https://napkin.ai', emoji:'✏️', bg:'#f8fafc', color:'#374151',
+    desc:'Convierte texto en diagramas, infografías y esquemas visuales automáticamente. Muy útil para presentar procesos, flujos de trabajo o conceptos complejos de forma visual.',
+    tags:['documentos','imagenes'],
+    tagLabels:['Diagramas','Infografías'],
+    uso:'Flujos de proceso · Organigramas · Esquemas visuales · Presentar procedimientos contables',
+    free:'Gratuito + Pro', nivel:'Básico',
+    accentBg:'var(--gray-l)', accentBorder:'#6b7280'
+  },
+  {
+    id:'canva-ai', programa:false,
+    name:'Canva (con IA)', url:'https://canva.com', emoji:'🖌️', bg:'#fff1f2', color:'#b91c1c',
+    desc:'Diseño gráfico con herramientas de IA integradas. Magic Write para texto, Text to Image para imágenes, y Magic Design para crear diseños completos desde una descripción.',
+    tags:['imagenes','documentos','redaccion'],
+    tagLabels:['Diseño','Imágenes','Documentos'],
+    uso:'Presentaciones · Infografías · Publicaciones · Tarjetas de presentación · Material de capacitación',
+    free:'Gratuito + Pro', nivel:'Básico',
+    accentBg:'var(--red-l)', accentBorder:'var(--red)'
+  },
+  {
+    id:'otter', programa:false,
+    name:'Otter.ai', url:'https://otter.ai', emoji:'🎙️', bg:'#f0fdfa', color:'#0f766e',
+    desc:'Transcripción automática de reuniones y audio en tiempo real. Genera resúmenes, identifica participantes y extrae puntos de acción. Compatible con Zoom, Teams y Meet.',
+    tags:['audio','documentos'],
+    tagLabels:['Transcripción','Reuniones','Audio'],
+    uso:'Actas de reunión · Transcribir entrevistas · Capturar acuerdos · Resumir conversaciones',
+    free:'Gratuito + Business', nivel:'Básico',
+    accentBg:'var(--teal-l)', accentBorder:'var(--teal)'
+  },
+  {
+    id:'fireflies', programa:false,
+    name:'Fireflies.ai', url:'https://fireflies.ai', emoji:'🔥', bg:'var(--purple-l)', color:'var(--purple)',
+    desc:'Notas automáticas de reuniones con IA. Se une a las reuniones de Teams, Zoom o Meet y genera transcripción, resumen y lista de tareas al terminar.',
+    tags:['audio','documentos'],
+    tagLabels:['Reuniones','Transcripción','Tareas'],
+    uso:'Reemplazar toma de notas manual · Actas automáticas · Seguimiento de compromisos',
+    free:'Gratuito + Business', nivel:'Básico',
+    accentBg:'var(--purple-l)', accentBorder:'var(--purple)'
+  },
+  {
+    id:'elevenlabs', programa:false,
+    name:'ElevenLabs', url:'https://elevenlabs.io', emoji:'🔊', bg:'#fffbeb', color:'#d97706',
+    desc:'Convierte texto en voz con calidad humana. Ideal para crear narraciones, podcasts, audios de capacitación o hacer accesible contenido escrito.',
+    tags:['audio'],
+    tagLabels:['Texto a voz','Audio','Accesibilidad'],
+    uso:'Narración de presentaciones · Podcasts internos · Accesibilidad · Material de e-learning',
+    free:'Gratuito + Pro', nivel:'Básico',
+    accentBg:'var(--gold-l)', accentBorder:'var(--gold)'
+  },
+  {
+    id:'runway', programa:false,
+    name:'Runway', url:'https://runwayml.com', emoji:'🎬', bg:'#1f2937', color:'white',
+    desc:'Generación y edición de video con IA. Desde texto o imagen genera clips de video profesionales. Útil para presentaciones dinámicas o material de comunicación interna.',
+    tags:['audio','imagenes'],
+    tagLabels:['Video IA','Generación'],
+    uso:'Video corporativo · Presentaciones animadas · Material de comunicación',
+    free:'Gratuito + Pro', nivel:'Intermedio',
+    accentBg:'#f8fafc', accentBorder:'#6b7280'
+  },
+  {
+    id:'midjourney', programa:false,
+    name:'Midjourney', url:'https://midjourney.com', emoji:'🖼️', bg:'#1e3a5f', color:'white',
+    desc:'Generación de imágenes de alta calidad a partir de texto. Resultados muy profesionales para presentaciones, informes visuales o material de comunicación.',
+    tags:['imagenes'],
+    tagLabels:['Imágenes IA','Diseño'],
+    uso:'Ilustraciones para presentaciones · Material de comunicación · Imágenes para informes',
+    free:'Pago (desde $10/mes)', nivel:'Básico a intermedio',
+    accentBg:'var(--blue-l)', accentBorder:'var(--blue)'
+  },
+  {
+    id:'dalle', programa:false,
+    name:'DALL·E (en ChatGPT)', url:'https://chatgpt.com', emoji:'🎭', bg:'#f0fdf4', color:'#10a37f',
+    desc:'Generación de imágenes integrada en ChatGPT. Se describe la imagen en texto y la genera. Más accesible que Midjourney para usuarios sin experiencia.',
+    tags:['imagenes'],
+    tagLabels:['Imágenes IA','Integrado en ChatGPT'],
+    uso:'Ilustraciones · Infografías · Imágenes conceptuales · Material visual para presentaciones',
+    free:'Con ChatGPT Plus', nivel:'Básico',
+    accentBg:'var(--green-l)', accentBorder:'var(--green)'
+  },
+  {
+    id:'github-copilot', programa:false,
+    name:'GitHub Copilot', url:'https://github.com/features/copilot', emoji:'💻', bg:'#1f2937', color:'white',
+    desc:'IA para programación. Sugiere código en tiempo real mientras se escribe. Muy útil para quienes trabajan con macros de Excel, automatizaciones en Python o fórmulas complejas.',
+    tags:['codigo','analisis'],
+    tagLabels:['Código','Programación','Macros'],
+    uso:'Macros de Excel · Fórmulas complejas · Scripts de automatización · VBA · Python',
+    free:'Gratuito (versión básica)', nivel:'Intermedio a avanzado',
+    accentBg:'#f8fafc', accentBorder:'#6b7280'
+  },
+  {
+    id:'v0', programa:false,
+    name:'v0 (Vercel)', url:'https://v0.dev', emoji:'⚡', bg:'#f8fafc', color:'#374151',
+    desc:'Genera interfaces y componentes web con IA desde una descripción en texto. Sin necesidad de saber programar. Para crear formularios, dashboards o herramientas internas simples.',
+    tags:['codigo','documentos'],
+    tagLabels:['Interfaces','Sin código'],
+    uso:'Formularios internos · Dashboards · Herramientas simples · Prototipos rápidos',
+    free:'Gratuito + Pro', nivel:'Intermedio',
+    accentBg:'var(--gray-l)', accentBorder:'#6b7280'
+  },
+  {
+    id:'zapier-ai', programa:false,
+    name:'Zapier (con IA)', url:'https://zapier.com', emoji:'⚙️', bg:'#fff7ed', color:'#c2410c',
+    desc:'Automatización entre aplicaciones con IA integrada. Conecta cientos de apps sin código. Por ejemplo: cuando llega un correo específico, guardar el adjunto en Drive y notificar en Teams.',
+    tags:['office','analisis'],
+    tagLabels:['Automatización','Conexión de apps'],
+    uso:'Flujos entre apps · Notificaciones automáticas · Sincronización de datos · Recordatorios',
+    free:'Gratuito (5 zaps) + Pago', nivel:'Intermedio',
+    accentBg:'var(--orange-l)', accentBorder:'var(--orange)'
+  },
+  {
+    id:'notion-ai', programa:false,
+    name:'Notion AI', url:'https://notion.so', emoji:'📋', bg:'#f8fafc', color:'#374151',
+    desc:'IA integrada en Notion para gestión de conocimiento. Genera resúmenes, busca en tu base de datos propia, redacta y organiza información del equipo.',
+    tags:['documentos','redaccion','analisis'],
+    tagLabels:['Gestión de conocimiento','Organización'],
+    uso:'Base de conocimiento del equipo · Procedimientos internos · Wikis · Seguimiento de proyectos',
+    free:'Gratuito + Plus', nivel:'Básico a intermedio',
+    accentBg:'var(--gray-l)', accentBorder:'#6b7280'
+  },
+  {
+    id:'grammarly', programa:false,
+    name:'Grammarly', url:'https://grammarly.com', emoji:'✅', bg:'#f0fdf4', color:'#15803d',
+    desc:'Corrección gramatical y de estilo con IA. Disponible como extensión del navegador. Revisa textos en Word, Gmail, Outlook y cualquier campo de texto en el navegador.',
+    tags:['redaccion'],
+    tagLabels:['Corrección','Gramática','Extensión'],
+    uso:'Corrección de correos · Mejorar redacción · Verificar ortografía · Ajustar tono',
+    free:'Gratuito + Premium', nivel:'Básico',
+    accentBg:'var(--green-l)', accentBorder:'var(--green)'
+  },
+  {
+    id:'deepl', programa:false,
+    name:'DeepL', url:'https://deepl.com', emoji:'🌐', bg:'#eff6ff', color:'#2563eb',
+    desc:'Traducción automática de alta calidad con IA. Mejor que Google Translate para textos formales y técnicos. Disponible como extensión y como aplicación de escritorio.',
+    tags:['redaccion','documentos'],
+    tagLabels:['Traducción','Documentos'],
+    uso:'Traducir contratos · Correos en inglés · Documentos técnicos · Comunicaciones internacionales',
+    free:'Gratuito + Pro', nivel:'Básico',
+    accentBg:'var(--blue-l)', accentBorder:'var(--blue)'
+  },
+  {
+    id:'claude-code', programa:false,
+    name:'Claude Code', url:'https://claude.ai/code', emoji:'🖥️', bg:'#fffbeb', color:'#d97706',
+    desc:'Versión de Claude especializada en código y automatización. Para usuarios que quieran crear scripts, automatizaciones o trabajar con datos de forma más avanzada.',
+    tags:['codigo','analisis'],
+    tagLabels:['Código','Automatización avanzada'],
+    uso:'Scripts de automatización · Análisis de datos · Macros avanzadas · Integración de sistemas',
+    free:'Con licencia Claude', nivel:'Avanzado',
+    accentBg:'var(--gold-l)', accentBorder:'var(--gold)'
+  },
+];
+
+// TAG COLORS
+const tagColors = {
+  'redaccion':   {bg:'#dbeafe',color:'#1d4ed8'},
+  'analisis':    {bg:'#f0fdf4',color:'#15803d'},
+  'busqueda':    {bg:'#f0fdfa',color:'#0f766e'},
+  'documentos':  {bg:'#f5f3ff',color:'#6d28d9'},
+  'imagenes':    {bg:'#fff1f2',color:'#b91c1c'},
+  'audio':       {bg:'#fff7ed',color:'#c2410c'},
+  'office':      {bg:'#eff6ff',color:'#1d4ed8'},
+  'codigo':      {bg:'#1f2937',color:'white'},
+  'gratis':      {bg:'#f0fdf4',color:'#15803d'},
+};
+
+function buildCard(t) {
+  const isLight = t.bg.startsWith('#f') || t.bg.startsWith('var(--');
+  const nameColor = isLight ? 'var(--text)' : (t.color === 'white' ? 'white' : 'var(--text)');
+  const descColor = isLight ? 'var(--muted)' : 'rgba(255,255,255,.7)';
+
+  const tags = t.tags.map((tag,i) => {
+    const tc = tagColors[tag] || {bg:'#f3f4f6',color:'var(--gray)'};
+    return `<span class="tag" style="background:${tc.bg};color:${tc.color}">${t.tagLabels[i]||tag}</span>`;
+  }).join('');
+
+  const freeBg = t.free.includes('Gratuito') ? '#dcfce7' : '#fef9c3';
+  const freeColor = t.free.includes('Gratuito') ? '#15803d' : '#854d0e';
+
+  return `<div class="card" data-tags="${t.tags.join(',')}" data-name="${t.name.toLowerCase()}" data-programa="${t.programa}">
+    <div class="card-header">
+      <div class="card-logo" style="background:${t.bg};font-size:1.6rem">${t.emoji}</div>
+      <div>
+        <div class="card-name">${t.name}</div>
+        <a href="${t.url}" target="_blank" rel="noopener" class="card-url">↗ ${t.url.replace('https://','')}</a>
+      </div>
+    </div>
+    <div class="card-desc">${t.desc}</div>
+    <div class="card-tags">${tags}</div>
+    <div class="card-use" style="background:${t.accentBg};border-color:${t.accentBorder}">
+      <strong style="font-size:.72rem;text-transform:uppercase;letter-spacing:.07em;color:${t.accentBorder};display:block;margin-bottom:.3rem;font-weight:800">Ideal para</strong>
+      ${t.uso}
+    </div>
+    <div class="card-footer">
+      <span class="free-badge" style="background:${freeBg};color:${freeColor}">${t.free}</span>
+      <span class="level-badge">Nivel: ${t.nivel}</span>
+    </div>
+  </div>`;
+}
+
+// Build grids
+const gp = document.getElementById('grid-programa');
+const go = document.getElementById('grid-otras');
+tools.forEach(t => {
+  const html = buildCard(t);
+  const div = document.createElement('div');
+  div.innerHTML = html;
+  if(t.programa) gp.appendChild(div.firstChild);
+  else go.appendChild(div.firstChild);
+});
+
+// Filters
+let activeFilter = 'all';
+let searchQuery = '';
+
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    activeFilter = btn.dataset.filter;
+    applyFilters();
+  });
+});
+
+document.getElementById('searchInput').addEventListener('input', e => {
+  searchQuery = e.target.value.toLowerCase().trim();
+  applyFilters();
+});
+
+function applyFilters() {
+  let visible = 0;
+  document.querySelectorAll('.card').forEach(card => {
+    const tags = card.dataset.tags.split(',');
+    const name = card.dataset.name;
+    const isGratis = card.querySelector('.free-badge').textContent.includes('Gratuito');
+    
+    const matchFilter = activeFilter === 'all' || tags.includes(activeFilter) || (activeFilter === 'gratis' && isGratis);
+    const matchSearch = !searchQuery || name.includes(searchQuery) || card.querySelector('.card-desc').textContent.toLowerCase().includes(searchQuery) || card.querySelector('.card-use').textContent.toLowerCase().includes(searchQuery);
+    
+    const show = matchFilter && matchSearch;
+    card.classList.toggle('hidden', !show);
+    if(show) visible++;
+  });
+
+  // Show/hide section titles
+  const progVisible = [...document.querySelectorAll('#grid-programa .card')].some(c=>!c.classList.contains('hidden'));
+  const otrasVisible = [...document.querySelectorAll('#grid-otras .card')].some(c=>!c.classList.contains('hidden'));
+  document.getElementById('section-programa').style.display = progVisible ? '' : 'none';
+  document.getElementById('section-otras').style.display = otrasVisible ? '' : 'none';
+  document.getElementById('empty-state').classList.toggle('hidden', visible > 0);
+}
+</script>
+</body>
+</html>
